@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="查看候选分子的二维结构、交互式三维构象和 PubChem 属性。">
+    <title>分子详情 · 分子探索</title>
+    <link rel="stylesheet" href="/molecule-search/styles.css">
+    <link rel="stylesheet" href="/molecule-search/detail.css">
+    <script defer src="/RDKit_minimal.js"></script>
+    <script defer src="/molecule-core.js"></script>
+    <script defer src="/viewer-2d.js"></script>
+    <script defer src="/molecule-search/structure-drawing.js"></script>
+    <script defer src="/three.min.js"></script>
+    <script defer src="/crystal-core.js"></script>
+    <script defer src="/pointer-controls.js"></script>
+    <script defer src="/viewer-3d.js"></script>
+    <script defer src="/molecule-search/detail-3d.js"></script>
+    {% if demo %}<script defer src="/molecule-search/demo-data.js"></script>{% endif %}
+    <script defer src="/molecule-search/detail.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrap topbar-inner">
+        <a class="brand" href="./">
+          <span class="brand-mark" aria-hidden="true">⌬</span>
+          分子探索
+        </a>
+        <a class="viewer-link" href="./">返回分子搜索</a>
+      </div>
+    </header>
+
+    <main class="wrap detail-page">
+      <div class="intro detail-intro">
+        <h1 id="molecule-name">分子详情</h1>
+        <p id="molecule-english" lang="en" hidden></p>
+      </div>
+
+      <div id="detail-error" class="feedback detail-error" data-state="error" role="status" hidden>
+        <span class="feedback-icon" aria-hidden="true"></span>
+        <h2>暂时无法查看分子详情</h2>
+        <p id="detail-error-message"></p>
+      </div>
+
+      <div class="detail-workspace" id="detail-workspace" hidden>
+        <section class="panel detail-visual" aria-labelledby="structure-title">
+          <div class="detail-visual-heading">
+            <h2 id="structure-title">分子结构</h2>
+            <div class="detail-view-tabs" role="tablist" aria-label="分子结构视图">
+              <button id="detail-tab-2d" type="button" role="tab" aria-selected="true" aria-controls="detail-panel-2d">2D</button>
+              <button id="detail-tab-3d" type="button" role="tab" aria-selected="false" aria-controls="detail-panel-3d" tabindex="-1">3D</button>
+            </div>
+          </div>
+          <div id="detail-panel-2d" role="tabpanel" aria-labelledby="detail-tab-2d" tabindex="0">
+            <div id="molecule-structure" class="structure detail-structure">
+              <span class="structure-note">正在读取分子结构…</span>
+            </div>
+          </div>
+          <div id="detail-panel-3d" role="tabpanel" aria-labelledby="detail-tab-3d" tabindex="0" hidden>
+            <div class="detail-three-stage">
+              <div id="detail-3d-host" class="detail-three-model" hidden></div>
+              <p id="detail-3d-status" class="detail-three-status" role="status"></p>
+            </div>
+            <div id="detail-3d-controls" class="detail-three-toolbar" hidden>
+              <p id="detail-3d-help">拖动旋转，滚轮或按钮缩放</p>
+              <div class="detail-three-actions" role="group" aria-label="三维结构视角">
+                <button type="button" data-action="zoom-in" aria-label="放大">+</button>
+                <button type="button" data-action="zoom-out" aria-label="缩小">−</button>
+                <button type="button" data-action="reset">重置视角</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel detail-properties" aria-labelledby="properties-title">
+          <h2 id="properties-title">分子属性</h2>
+          <p class="detail-status" id="detail-status" role="status" hidden></p>
+          <div id="detail-facts" hidden>
+            <dl class="detail-facts">
+              <div><dt>分子式</dt><dd class="formula" id="detail-formula"></dd></div>
+              <div><dt>分子量</dt><dd id="detail-mass"></dd></div>
+              <div><dt>PubChem CID</dt><dd id="detail-cid"></dd></div>
+              <div><dt>IUPAC 名称</dt><dd id="detail-iupac"></dd></div>
+              <div><dt>SMILES</dt><dd><code id="detail-smiles"></code></dd></div>
+              <div><dt>InChIKey</dt><dd><code id="detail-inchikey"></code></dd></div>
+            </dl>
+            <h3>PubChem 计算属性</h3>
+            <dl class="detail-metrics">
+              <div><dt>精确质量</dt><dd id="detail-exact-mass"></dd></div>
+              <div><dt>XLogP（估算）</dt><dd id="detail-xlogp"></dd></div>
+              <div><dt>拓扑极性表面积（TPSA）</dt><dd id="detail-tpsa"></dd></div>
+              <div><dt>形式电荷</dt><dd id="detail-formal-charge"></dd></div>
+              <div><dt>氢键供体数</dt><dd id="detail-h-bond-donors"></dd></div>
+              <div><dt>氢键受体数</dt><dd id="detail-h-bond-acceptors"></dd></div>
+              <div><dt>重原子数</dt><dd id="detail-heavy-atoms"></dd></div>
+              <div><dt>可旋转键数</dt><dd id="detail-rotatable-bonds"></dd></div>
+              <div><dt>已定义原子立体中心数</dt><dd id="detail-stereocenters"></dd></div>
+            </dl>
+            <a id="detail-source" class="detail-source" target="_blank" rel="noopener noreferrer">查看 PubChem 原始记录</a>
+          </div>
+        </section>
+
+        <section class="panel detail-match" id="detail-match" aria-labelledby="match-title" hidden>
+          <h2 id="match-title">匹配说明</h2>
+          <p id="detail-reason" hidden></p>
+          <p id="detail-caveat" hidden></p>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
