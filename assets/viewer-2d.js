@@ -49,23 +49,30 @@
       if (!molecule.is_valid()) {
         throw new Error("RDKit 无法处理显式氢原子。");
       }
+      // Expand hydrogens when a single atom would render as a condensed formula.
+      const singleAtom = molecule.get_num_atoms() === 1;
+      const methane = singleAtom && molecule.get_smiles() === "C";
+      if (singleAtom) molecule.add_hs_in_place();
+      const expanded = singleAtom && molecule.get_num_atoms() > 1;
       if (!setReadable2dCoords(molecule)) {
         throw new Error("RDKit 无法为该分子生成二维坐标。");
       }
 
+      const drawingSize = Math.min(width, height);
       const drawOptions = {
         width,
         height,
         // Transparent SVG lets the 2D stage's shared CSS canvas color show through.
         backgroundColour: [0, 0, 0, 0],
         symbolColour: [0.13, 0.15, 0.17, 1],
-        bondLineWidth: 1.0,
-        fixedBondLength: 28,
-        fixedFontSize: 18,
+        bondLineWidth: expanded ? 2 : 1,
+        fixedBondLength: expanded ? Math.round(drawingSize * 0.28) : 28,
+        fixedFontSize: expanded ? Math.round(drawingSize * 0.115) : 18,
         padding: 0.06,
         clearBackground: true,
         multipleBondOffset: 0.15,
       };
+      if (methane) drawOptions.atomLabels = { 0: "C" };
       const svgMarkup = molecule.get_svg_with_highlights(
         JSON.stringify(drawOptions),
       );

@@ -26,24 +26,7 @@
   background-color: #fbfaff;
 }
 .detail-structure img { inline-size: min(100%, 560px); }
-.detail-three-stage {
-  display: grid;
-  place-items: center;
-  min-height: 328px;
-  margin-top: 17px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: #fbfaff;
-}
-.detail-three-model { width: 100%; height: clamp(235px, 32vw, 322px); }
-.detail-three-model canvas:focus-visible { outline-offset: -3px; }
-.detail-three-status { max-width: 42ch; margin: 10px 14px; color: var(--muted); font-size: 13px; text-align: center; line-height: 1.6; }
-.detail-three-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 12px; }
-.detail-three-toolbar p { margin: 0; color: var(--muted); font-size: 13px; }
-.detail-three-actions { display: flex; flex-wrap: wrap; gap: 6px; }
-.detail-three-actions button { min-width: 42px; min-height: 40px; padding: 2px 10px; border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--accent); font-size: 14px; font-weight: 650; }
-.detail-three-actions button:hover { border-color: #aaa0eb; background: #f7f5ff; }
+#detail-panel-3d { margin-top: 17px; }
 .detail-properties { grid-area: properties; }
 .detail-properties h3 { margin: 20px 0 0; font-size: 15px; }
 .detail-facts { margin: 13px 0 16px; }
@@ -76,5 +59,4 @@
 
 @media (max-width: 440px) {
   .detail-structure { min-height: 235px; padding: 6px; }
-  .detail-three-stage { min-height: 235px; }
 }

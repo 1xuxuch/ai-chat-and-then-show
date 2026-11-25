@@ -8,7 +8,6 @@ const buttonLabel = document.querySelector("#button-label");
 const examples = document.querySelectorAll(".example");
 const resultsPanel = document.querySelector("#results-panel");
 const count = document.querySelector("#result-count");
-const preview = document.querySelector("#preview");
 const results = document.querySelector("#results");
 const feedback = document.querySelector("#feedback");
 const feedbackTitle = document.querySelector("#feedback-title");
@@ -49,7 +48,6 @@ function updateQuery() {
 }
 
 function showFeedback(state, title, message) {
-  preview.hidden = true;
   results.hidden = true;
   count.hidden = true;
   feedback.hidden = false;
@@ -105,7 +103,6 @@ function showResults({ id, data }) {
   candidates.replaceChildren(...data.candidates.map((candidate, index) => createCandidate(candidate, candidateId(id, index))));
   count.textContent = `${data.candidates.length} 个候选分子`;
   count.hidden = false;
-  preview.hidden = true;
   feedback.hidden = true;
   results.hidden = false;
   announcement.textContent = `找到 ${count.textContent}。`;
@@ -179,13 +176,5 @@ const saved = readSearch();
 if (Array.isArray(saved?.data?.candidates)) {
   query.value = saved.description;
   showResults(saved);
-} else {
-  void drawStructure(
-    document.querySelector("#example-structure"),
-    "CN1C=NC2=C1C(=O)N(C(=O)N2C)C",
-    "咖啡因",
-    400,
-    272,
-  );
 }
 updateQuery();

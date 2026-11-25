@@ -11,12 +11,9 @@
     <script defer src="/molecule-core.js"></script>
     <script defer src="/viewer-2d.js"></script>
     <script defer src="/molecule-search/structure-drawing.js"></script>
-    <script defer src="/three.min.js"></script>
-    <script defer src="/crystal-core.js"></script>
-    <script defer src="/pointer-controls.js"></script>
-    <script defer src="/viewer-3d.js"></script>
-    <script defer src="/molecule-search/detail-3d.js"></script>
+    <script defer src="/3Dmol-2.5.5.min.js"></script>
     {% if demo %}<script defer src="/molecule-search/demo-data.js"></script>{% endif %}
+    <script defer src="/molecule-search/molecule-view.js"></script>
     <script defer src="/molecule-search/detail.js"></script>
   </head>
   <body>
@@ -57,18 +54,7 @@
             </div>
           </div>
           <div id="detail-panel-3d" role="tabpanel" aria-labelledby="detail-tab-3d" tabindex="0" hidden>
-            <div class="detail-three-stage">
-              <div id="detail-3d-host" class="detail-three-model" hidden></div>
-              <p id="detail-3d-status" class="detail-three-status" role="status"></p>
-            </div>
-            <div id="detail-3d-controls" class="detail-three-toolbar" hidden>
-              <p id="detail-3d-help">拖动旋转，滚轮或按钮缩放</p>
-              <div class="detail-three-actions" role="group" aria-label="三维结构视角">
-                <button type="button" data-action="zoom-in" aria-label="放大">+</button>
-                <button type="button" data-action="zoom-out" aria-label="缩小">−</button>
-                <button type="button" data-action="reset">重置视角</button>
-              </div>
-            </div>
+            {% include "molecule-view.html" %}
           </div>
         </section>
 

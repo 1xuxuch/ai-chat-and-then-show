@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="用自然语言查找化学分子，查看 AI 推荐理由、二维结构和 PubChem 记录。">
-    <title>分子探索 · {% if demo %}示例试运行{% else %}AI 分子搜索{% endif %}</title>
+    <meta name="description" content="用自然语言查找化学分子，查看匹配说明和分子详情。">
+    <title>分子探索 2.0 · {% if demo %}课堂示例{% else %}AI 分子搜索{% endif %}</title>
     <link rel="stylesheet" href="/molecule-search/styles.css">
     <script defer src="/RDKit_minimal.js"></script>
     <script defer src="/molecule-core.js"></script>
@@ -18,7 +18,7 @@
       <div class="wrap topbar-inner">
         <a class="brand" href="/molecule-search/">
           <span class="brand-mark" aria-hidden="true">⌬</span>
-          分子探索
+          分子探索 2.0
         </a>
       </div>
     </header>
@@ -27,20 +27,20 @@
       <div class="intro">
         <h1>用自然语言<span>找分子</span></h1>
         {% if demo %}
-        <p>示例试运行。选择一条示例并搜索，再点击候选查看分子属性和二维、三维结构。</p>
+        <p>选择一个课堂示例或输入分子名称，查看匹配结果。</p>
         {% else %}
-        <p>描述你想找的结构、性质或用途，AI 会推荐合适的化学分子，并说明匹配理由。</p>
+        <p>告诉 AI 你想找什么样的分子，查看推荐结果和匹配理由。</p>
         {% endif %}
       </div>
 
       <div class="workspace">
         <section class="panel query-panel" aria-labelledby="query-title">
-          <h2 id="query-title">分子描述</h2>
+          <h2 id="query-title">你想看什么分子？</h2>
           <form id="search-form">
             <label class="sr-only" for="query">你想找什么样的分子？</label>
             <div class="query-box">
               <textarea id="query" name="query" rows="6" required maxlength="600"
-                placeholder="例如，哪些分子有两个羧基且溶于水？"></textarea>
+                placeholder="例如，显示水分子"></textarea>
               <div id="query-count" class="query-count" aria-hidden="true">0 / 600</div>
             </div>
             <div class="query-actions">
@@ -53,38 +53,23 @@
 
           <div class="examples">
             <h3>试试这些描述</h3>
-            <button type="button" class="example"><span class="example-type">结构</span><span class="example-query">找含苯环和羟基的小分子</span><span class="example-arrow" aria-hidden="true">↗</span></button>
-            <button type="button" class="example"><span class="example-type">性质</span><span class="example-query">哪些有机酸容易溶于水？</span><span class="example-arrow" aria-hidden="true">↗</span></button>
-            <button type="button" class="example"><span class="example-type">用途</span><span class="example-query">茶叶中的常见小分子有哪些？</span><span class="example-arrow" aria-hidden="true">↗</span></button>
+            <button type="button" class="example"><span class="example-type">分子</span><span class="example-query">显示水分子</span></button>
+            <button type="button" class="example"><span class="example-type">结构</span><span class="example-query">找含苯环和羟基的小分子</span></button>
+            <button type="button" class="example"><span class="example-type">性质</span><span class="example-query">哪些有机酸容易溶于水？</span></button>
+            <button type="button" class="example"><span class="example-type">用途</span><span class="example-query">茶叶中的常见小分子有哪些？</span></button>
           </div>
         </section>
 
         <section class="panel results-panel" id="results-panel" aria-labelledby="results-title">
           <div class="results-heading">
-            <h2 id="results-title">搜索结果</h2>
+            <h2 id="results-title">匹配结果</h2>
             <span class="result-count" id="result-count" hidden></span>
           </div>
           <p class="sr-only" id="announcement" role="status"></p>
-          <div id="preview">
-            <figure class="preview">
-              <div id="example-structure" class="structure preview-structure">
-                <span class="structure-note">正在加载二维结构…</span>
-                <span class="preview-label">示例结构</span>
-              </div>
-              <figcaption class="preview-caption">
-                <div>
-                  <div class="preview-name">咖啡因 <span>Caffeine</span></div>
-                  <a href="https://pubchem.ncbi.nlm.nih.gov/compound/2519" target="_blank" rel="noopener noreferrer">PubChem CID 2519 <span aria-hidden="true">↗</span></a>
-                </div>
-                <span class="formula">C<sub>8</sub>H<sub>10</sub>N<sub>4</sub>O<sub>2</sub></span>
-              </figcaption>
-            </figure>
-            <p class="panel-note">输入描述后，这里会显示候选分子及可查证的结构。</p>
-          </div>
-          <div id="feedback" class="feedback" hidden>
+          <div id="feedback" class="feedback" data-state="empty">
             <span class="feedback-icon" aria-hidden="true"></span>
-            <h3 id="feedback-title"></h3>
-            <p id="feedback-message"></p>
+            <h3 id="feedback-title">等待搜索</h3>
+            <p id="feedback-message">输入分子名称或选择一个示例。</p>
           </div>
           <div id="results" hidden>
             <p class="summary" id="summary"></p>
@@ -93,7 +78,11 @@
         </section>
       </div>
 
-      <footer class="footer">{% if demo %}示例匹配说明为内置内容，结构和属性取自 PubChem。{% else %}匹配说明由 AI 生成，结构数据来自 PubChem。{% endif %}</footer>
+      <footer class="footer">
+        {% if demo %}匹配说明为课堂示例。{% else %}匹配说明由 AI 生成。{% endif %}
+        <a href="/LICENSE-Molecule-Viewer.txt" target="_blank" rel="noopener">Molecule Viewer · MIT</a>
+        <a href="/LICENSE-3Dmol.txt" target="_blank" rel="noopener">3Dmol.js 许可</a>
+      </footer>
     </main>
 
     <template id="candidate-template">

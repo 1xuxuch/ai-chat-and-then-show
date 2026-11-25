@@ -6,6 +6,7 @@
   --accent: #4e40c7;
   --muted: #65637d;
   --border: #e4e3ee;
+  --viewer-background: #fbfaff;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -52,24 +53,63 @@ kbd { font: inherit; border: 1px solid var(--border); border-radius: 4px; paddin
 .example { display: flex; align-items: center; width: 100%; min-height: 39px; padding: 5px 7px 5px 0; gap: 11px; border: 0; border-radius: 8px; background: transparent; color: inherit; font-size: 14px; text-align: left; }
 .example:hover { color: var(--accent); background: #f7f6ff; }
 .example-type { flex: none; border-radius: 5px; padding: 2px 7px; background: #efedfc; color: #5546b4; font-size: 12px; font-weight: 650; }
-.example-arrow { margin-left: auto; color: var(--accent); }
 
 .results-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 17px; }
 .result-count { color: var(--muted); font-size: 13px; }
-.preview { margin: 0; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
 .structure { position: relative; display: grid; place-items: center; min-width: 0; background-color: #f5f3fd; background-image: radial-gradient(#d7d1f1 1px, transparent 1px); background-size: 16px 16px; }
 .structure img { display: block; max-width: 100%; width: auto; height: auto; }
 .structure-note { padding: 12px; color: var(--muted); font-size: 13px; text-align: center; }
-.preview-structure { min-height: 288px; }
-.preview-structure img { width: min(88%, 400px); }
-.preview-label { position: absolute; top: 14px; left: 14px; padding: 4px 9px; border: 1px solid #e3dff8; border-radius: 6px; background: #fff; color: #5546b4; font-size: 12px; }
-.preview-caption { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 9px 14px; padding: 14px 17px; }
-.preview-name { margin-bottom: 4px; font-size: 17px; font-weight: 750; }
-.preview-name span { margin-left: 5px; color: var(--muted); font-size: 13px; font-weight: 500; }
-.preview-caption a { font-size: 12px; text-decoration: none; }
-.preview-caption a:hover, .source-link:hover { text-decoration: underline; }
+.source-link:hover { text-decoration: underline; }
 .formula { color: #493da7; font: 650 14px/1.4 Inter, system-ui, sans-serif; letter-spacing: .025em; }
-.panel-note { margin: 14px 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+
+.molecule-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: clamp(244px, 32vw, 335px);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--viewer-background);
+}
+.molecule-canvas { position: absolute; inset: 0; cursor: grab; }
+.molecule-canvas:active { cursor: grabbing; }
+.molecule-canvas:focus-visible { outline-offset: -3px; }
+.molecule-canvas.is-previewing { pointer-events: none; }
+.molecule-empty { max-width: 32ch; margin: 16px; color: var(--muted); font-size: 14px; line-height: 1.65; text-align: center; }
+.molecule-toolbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.molecule-source { margin: 0; color: var(--muted); font-size: 14px; }
+.molecule-controls { display: grid; gap: 10px; margin-top: 10px; }
+.molecule-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.molecule-control-label { color: var(--muted); font-size: 14px; font-weight: 650; }
+.molecule-actions .molecule-control-label { margin-inline-end: 5px; }
+.molecule-actions button {
+  min-height: 36px;
+  padding: 3px 9px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 650;
+}
+.molecule-actions button:hover { border-color: #aaa0eb; background: #f7f5ff; }
+.molecule-actions button[aria-pressed="true"] { border-color: #c8bff0; background: #efedfc; }
+.molecule-actions button[aria-label] { min-width: 36px; }
+.molecule-actions button:disabled { cursor: default; opacity: .65; }
+.molecule-live-speed { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 9px; }
+.molecule-speed { flex-wrap: nowrap; gap: 8px; min-height: 36px; }
+.molecule-speed input { flex: 1; min-width: 0; height: 30px; margin: 0; accent-color: var(--accent); }
+.molecule-speed output { min-width: 4ch; color: var(--accent); font-size: 14px; font-variant-numeric: tabular-nums; text-align: right; }
+.molecule-animation { min-width: 0; margin: 2px 0 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; }
+.molecule-animation summary { cursor: pointer; }
+.molecule-animation summary::marker { color: var(--accent); }
+.molecule-animation-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; margin-top: 10px; }
+.molecule-setting { display: grid; gap: 5px; min-width: 0; }
+.molecule-setting input, .molecule-setting select { width: 100%; min-width: 0; min-height: 36px; padding: 4px 7px; border: 1px solid var(--border); border-radius: 8px; color: inherit; background: #fff; font: inherit; }
+.molecule-preview-actions { margin-top: 10px; }
+.molecule-animation-note { margin: 0; color: var(--muted); font-size: 13px; }
+#feedback { min-height: 136px; }
 
 .feedback { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 345px; padding: 24px; border: 1px dashed #ddd8ee; border-radius: 14px; background: #f9f8fd; text-align: center; }
 .feedback h3 { margin: 13px 0 0; font-size: 17px; }
@@ -98,6 +138,7 @@ kbd { font: inherit; border: 1px solid var(--border); border-radius: 4px; paddin
 .detail-hint { margin-left: auto; color: var(--accent); }
 .unverified { color: #805418; }
 .footer { padding: 22px 0 28px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.footer a { margin-inline-start: .75em; }
 
 @media (max-width: 820px) {
   .wrap { width: min(100% - 36px, 630px); }
@@ -110,8 +151,7 @@ kbd { font: inherit; border: 1px solid var(--border); border-radius: 4px; paddin
   .topbar-inner { min-height: 56px; }
   .viewer-link { font-size: 12px; }
   .panel { padding: 17px; border-radius: 17px; }
-  .preview-structure { min-height: 226px; }
-  .preview-label { top: 9px; left: 9px; }
+  .molecule-actions button, .molecule-setting input, .molecule-setting select, .molecule-speed input { min-height: 42px; }
   .candidate { grid-template-columns: minmax(0, 1fr); }
   .candidate-structure { min-height: 120px; }
   .candidate-structure img { max-width: 150px; }

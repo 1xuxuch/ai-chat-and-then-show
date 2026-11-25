@@ -21,8 +21,9 @@ ASSET_ROOT = ROOT / "assets"
 ASSETS = {
     "RDKit_minimal.js", "RDKit_minimal.wasm", "three.min.js", "crystal-core.js",
     "pointer-controls.js", "molecule-core.js", "viewer-2d.js", "viewer-3d.js",
+    "3Dmol-2.5.5.min.js", "LICENSE-3Dmol.txt", "LICENSE-Molecule-Viewer.txt",
 }
-SEARCH_ASSETS = {"app.js", "styles.css", "detail.js", "detail.css", "detail-3d.js", "structure-drawing.js"}
+SEARCH_ASSETS = {"app.js", "styles.css", "detail.js", "detail.css", "molecule-view.js", "structure-drawing.js"}
 CID_PATTERN = re.compile(r"[1-9][0-9]{0,11}")
 app = Flask(__name__, static_folder=None, template_folder=str(SEARCH_ROOT))
 

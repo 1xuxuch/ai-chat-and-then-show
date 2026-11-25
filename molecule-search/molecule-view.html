@@ -1,0 +1,59 @@
+<div class="molecule-view" data-molecule-viewer>
+  <div class="molecule-stage">
+    <div class="molecule-canvas" data-molecule-canvas role="img" tabindex="0" hidden></div>
+    <p class="molecule-empty" data-molecule-empty hidden></p>
+  </div>
+  <div class="molecule-toolbar">
+    <p class="molecule-source" data-molecule-status role="status">正在加载三维结构…</p>
+  </div>
+  <div class="molecule-controls" data-molecule-actions hidden>
+    <div class="molecule-actions" role="group" aria-labelledby="molecule-style-label">
+      <span id="molecule-style-label" class="molecule-control-label">显示模型</span>
+      <button type="button" data-model="ball-stick" aria-pressed="true">球棍</button>
+      <button type="button" data-model="stick" aria-pressed="false">棍状</button>
+      <button type="button" data-model="space-filling" aria-pressed="false">空间填充</button>
+    </div>
+    <div class="molecule-actions" role="group" aria-label="三维视角">
+      <button type="button" data-action="zoom-out" aria-label="缩小">−</button>
+      <button type="button" data-action="zoom-in" aria-label="放大">+</button>
+      <button type="button" data-action="spin" aria-pressed="false">自动旋转</button>
+      <button type="button" data-action="reset">重置视角</button>
+    </div>
+    <div class="molecule-live-speed">
+      <label class="molecule-control-label" for="molecule-rotation-speed">自动旋转速度</label>
+      <div class="molecule-actions molecule-speed">
+        <input id="molecule-rotation-speed" type="range" min="0.25" max="3" step="0.25" value="1" aria-valuetext="1 倍">
+        <output for="molecule-rotation-speed" data-speed-value aria-live="off">1.00×</output>
+        <button type="button" data-action="speed-normal" aria-label="恢复 1 倍速率">1×</button>
+      </div>
+    </div>
+    <details class="molecule-animation">
+      <summary class="molecule-control-label">旋转动画</summary>
+      <div class="molecule-animation-fields">
+        <label class="molecule-setting">
+          <span class="molecule-control-label">起始角（度）</span>
+          <input id="molecule-animation-from" type="number" min="-720" max="720" step="1" value="0" required>
+        </label>
+        <label class="molecule-setting">
+          <span class="molecule-control-label">结束角（度）</span>
+          <input id="molecule-animation-to" type="number" min="-720" max="720" step="1" value="360" required>
+        </label>
+        <label class="molecule-setting">
+          <span class="molecule-control-label">动作</span>
+          <select id="molecule-animation-motion">
+            <option value="one-way">单向</option>
+            <option value="oscillate">往返</option>
+          </select>
+        </label>
+        <label class="molecule-setting">
+          <span class="molecule-control-label">时长（秒）</span>
+          <input id="molecule-animation-duration" type="number" min="1" max="15" step="0.5" value="9" required>
+        </label>
+      </div>
+      <div class="molecule-actions molecule-preview-actions">
+        <button type="button" data-action="preview">预览动画</button>
+        <p class="molecule-animation-note">以当前视角为基准，预览后恢复视角。</p>
+      </div>
+    </details>
+  </div>
+</div>

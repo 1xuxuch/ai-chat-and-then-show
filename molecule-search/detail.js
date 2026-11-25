@@ -8,10 +8,10 @@ const statusNote = document.querySelector("#detail-status");
 const facts = document.querySelector("#detail-facts");
 const source = document.querySelector("#detail-source");
 const structureTabs = [...document.querySelectorAll(".detail-view-tabs [role=tab]")];
-const threeStatus = document.querySelector("#detail-3d-status");
+const threeView = window.MoleculeView.mount(document.querySelector("[data-molecule-viewer]"));
 const unavailable = "暂无记录";
 let displayedSmiles = null;
-let threeView = null;
+let threeRecord;
 
 function selectStructureTab(target) {
   structureTabs.forEach((tab) => {
@@ -21,8 +21,8 @@ function selectStructureTab(target) {
     document.getElementById(tab.getAttribute("aria-controls")).hidden = !selected;
   });
 
-  if (target.id === "detail-tab-3d") void threeView?.show();
-  else threeView?.hide();
+  if (target.id === "detail-tab-3d") void threeView.show(threeRecord);
+  else threeView.pause();
 }
 
 structureTabs.forEach((tab, index) => {
@@ -93,7 +93,7 @@ function withUnit(value, unit) {
   return value === null || value === undefined || value === "" ? null : `${value} ${unit}`;
 }
 
-function showProperties(record, name) {
+function showProperties(record, name, missing = unavailable) {
   const weight = Number(record.molecular_weight);
   const values = {
     formula: record.formula,
@@ -113,7 +113,7 @@ function showProperties(record, name) {
     stereocenters: record.defined_atom_stereocenters,
   };
   for (const [field, value] of Object.entries(values)) {
-    document.querySelector(`#detail-${field}`).textContent = value === "" ? unavailable : value ?? unavailable;
+    document.querySelector(`#detail-${field}`).textContent = value === "" ? missing : value ?? missing;
   }
   facts.hidden = false;
   source.href = `https://pubchem.ncbi.nlm.nih.gov/compound/${record.cid}`;
@@ -163,27 +163,18 @@ async function openDetails() {
 
   if (!cid) {
     structure.querySelector(".structure-note").textContent = "暂无可核验结构";
-    threeStatus.textContent = "暂无可核验的三维构象。";
     setStatus("PubChem 暂未确认该候选。");
     return;
   }
 
-  if (window.MoleculeDetail3D) {
-    threeView = window.MoleculeDetail3D.mount({
-      cid,
-      host: document.querySelector("#detail-3d-host"),
-      status: threeStatus,
-      controls: document.querySelector("#detail-3d-controls"),
-    });
-  } else {
-    threeStatus.textContent = "三维视图加载失败，请刷新页面后重试。";
-  }
+  threeRecord = { cid, name: nameHeading.textContent };
 
   setStatus("正在读取 PubChem 详细属性…");
-  if (cachedRecord) showProperties(cachedRecord, nameHeading.textContent);
+  if (cachedRecord) showProperties(cachedRecord, nameHeading.textContent, "查询中…");
   try {
     const record = await loadDetails(cid);
     showName(candidate?.name || record.title || `PubChem CID ${cid}`, candidate?.lookup_name || record.title);
+    threeRecord.name = nameHeading.textContent;
     showProperties({
       ...record,
       formula: record.formula || cachedRecord?.formula,
@@ -191,8 +182,12 @@ async function openDetails() {
     }, nameHeading.textContent);
     setStatus("");
   } catch (error) {
-    if (cachedRecord) setStatus("暂时无法读取 PubChem 的补充属性，仍可查阅搜索时获取的资料。");
-    else showError(error.message || "暂时无法读取 PubChem 详情，请稍后重试。");
+    if (cachedRecord) {
+      showProperties(cachedRecord, nameHeading.textContent, "未获取");
+      setStatus("暂时无法读取 PubChem 的补充属性，仍可查阅搜索时获取的资料。");
+    } else {
+      showError(error.message || "暂时无法读取 PubChem 详情，请稍后重试。");
+    }
   }
 }
 
